@@ -8,7 +8,7 @@ export default function Sidebar() {
 
   return (
     <div className="fixed left-0 top-0 h-full w-64 bg-white border-r border-pink-200 flex flex-col z-40">
-      {/* Logo/Home Button */}
+
       <Link
         href="/"
         className={`flex items-center gap-3 px-6 py-4 hover:bg-pink-50 transition-colors ${
@@ -21,7 +21,7 @@ export default function Sidebar() {
         <span className="font-semibold text-lg text-pink-600">T-Mobile</span>
       </Link>
 
-      {/* Navigation Buttons */}
+
       <nav className="flex flex-col mt-4">
         <Link
           href="/"

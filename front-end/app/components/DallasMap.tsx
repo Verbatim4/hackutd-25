@@ -410,7 +410,6 @@ export default function DallasMap({ view }: { view: MapView }) {
         </div>
       )}
       
-      {/* Legend */}
       <div className="absolute bottom-4 right-4 bg-white rounded-lg shadow-lg p-4 z-[1000] border-2 border-pink-300">
         <h3 className="font-semibold mb-2 text-sm text-pink-600">Performance Indicators</h3>
         <div className="flex items-center gap-2 mb-2">
