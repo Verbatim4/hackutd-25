@@ -1,58 +1,75 @@
 import pandas as pd
 from sklearn.cluster import DBSCAN
+import seaborn as sns
 import matplotlib.pyplot as plt
-import datetime
-import time
 
 def run_clustering():
     # Load latest feedback data
-    data = pd.read_csv('dfw_complaints.csv')  # use master CSV with all complaints
+    data = pd.read_csv('dfw_complaints.csv')  # master CSV with all complaints
 
     # Run DBSCAN
     X = data[['latitude', 'longitude']].values
-    db = DBSCAN(eps=0.03, min_samples=2).fit(X)
+    db = DBSCAN(eps=0.0009, min_samples=20).fit(X)
     data['cluster'] = db.labels_
 
     print("\nData with cluster labels:")
     print(data.head())
 
-    # Adjust severity for clustered complaints
-    alpha = 0.5
-    data['adjusted_severity'] = data['sentiment'].abs() * (1 + alpha * (data['cluster'] + 1))
-    print("\nData with adjusted severity:")
-    print(data.head())
+    # Count clusters and noise
+    unique_clusters = set(db.labels_)
+    n_clusters = len(unique_clusters) - (1 if -1 in unique_clusters else 0)
+    n_noise = list(db.labels_).count(-1)
 
-    # Save updated CSV
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")
-    output_file = f"outputs/hotspots_{timestamp}.csv"
-    data.to_csv(output_file, index=False)
-    print(f"\nSaved results to '{output_file}'")
+    print(f"\nDetected {n_clusters} clusters and {n_noise} noise points.")
+    print(f"Cluster label range: {sorted(unique_clusters)}")
 
-    # Visualize clusters
-    plt.figure(figsize=(8,6))
-    unique_clusters = set(data['cluster'])
-    colors = plt.cm.get_cmap('tab10', len(unique_clusters))
+    # Separate noise and clusters
+    noise = data[data['cluster'] == -1]
+    clusters = data[data['cluster'] != -1]
 
-    for cluster_id in unique_clusters:
-        cluster_points = data[data['cluster'] == cluster_id]
-        if cluster_id == -1:
-            color = 'black'  # noise points
-            label = 'Noise'
-        else:
-            color = colors(cluster_id)
-            label = f'Cluster {cluster_id}'
-        plt.scatter(cluster_points['longitude'], cluster_points['latitude'], c=[color], s=100, label=label)
+    # Set Seaborn theme
+    sns.set(style="whitegrid", context="talk")
 
+    # Create scatter plot
+    plt.figure(figsize=(10, 8))
+
+    # Plot noise (transparent)
+    if not noise.empty:
+        sns.scatterplot(
+            data=noise,
+            x="longitude",
+            y="latitude",
+            color="gray",
+            alpha=0.05,
+            s=8,
+            linewidth=0,
+            label="Noise"
+        )
+
+    # Plot clusters
+    if not clusters.empty:
+        sns.scatterplot(
+            data=clusters,
+            x="longitude",
+            y="latitude",
+            hue="cluster",
+            palette="tab10",
+            s=10,
+            linewidth=0,
+            alpha=0.8,
+            legend="full"
+        )
+
+    # Customize axes and layout
     plt.xlabel('Longitude')
     plt.ylabel('Latitude')
-    plt.title(f'T-Mobile Hotspots (Updated: {timestamp})')
-    plt.legend()
-    plt.savefig(f"maps/hotspot_map_{timestamp}.png")
-    plt.close()
-    print(f"Saved hotspot map to 'maps/hotspot_map_{timestamp}.png'")
+    plt.title(f'T-Mobile Hotspots — {n_clusters} Clusters Detected')
+    plt.legend(title="Cluster", loc='best', fontsize='small')
+    plt.tight_layout()
 
-# Run the clustering every hour
-while True:
-    run_clustering()
-    print(" Sleeping for 1 hour...\n")
-    time.sleep(3600)
+    # Save plot
+    plt.savefig("hotspot_map.png", dpi=300)
+    plt.close()
+    print("Saved hotspot map to 'hotspot_map.png'")
+
+run_clustering()
