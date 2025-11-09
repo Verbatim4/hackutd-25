@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.cluster import DBSCAN
 import torch
-from torch_geometric.data import Data
+from torch_geometric.data import Datanpr
 from torch_geometric.nn import GCNConv
 
 

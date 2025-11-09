@@ -354,8 +354,7 @@ export default function DallasMap({ view }: { view: MapView }) {
       
       {/* Hover Tooltip - Positioned above the dot */}
       {hoveredLocation !== null && hoverPosition && (
-        <div 
-          className="absolute bg-white rounded-lg shadow-xl p-4 z-[1000] border-2 border-pink-300 min-w-[250px] pointer-events-none"
+        <div className="absolute top-16 bg-white rounded-lg shadow-xl p-4 z-[1000] border-2 border-pink-300 min-w-[250px] pointer-events-none"
           style={{
             left: `${hoverPosition.x}px`,
             top: `${hoverPosition.y - 180}px`,
@@ -424,6 +423,16 @@ export default function DallasMap({ view }: { view: MapView }) {
     </div>
   );
 }
-
+      <div className="absolute bottom-4 right-4 bg-white rounded-lg shadow-lg p-4 z-[1000] border-2 border-pink-300">
+        <h3 className="font-semibold mb-2 text-sm text-pink-600">Performance Indicators</h3>
+        <div className="flex items-center gap-2 mb-2">
+          <div className="w-4 h-4 bg-red-500 rounded-full"></div>
+          <span className="text-sm text-gray-700">High Risk Zones</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 bg-green-500 rounded-full"></div>
+          <span className="text-sm text-gray-700">Strong Coverage Zone</span>
+        </div>
+      </div>
 
 
