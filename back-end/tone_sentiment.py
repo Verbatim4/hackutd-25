@@ -24,49 +24,14 @@ _sentiment = pipeline("text-classification", model="cardiffnlp/twitter-roberta-b
 
 
 def transcribe_audio(audio_path: str) -> str:
-    """
-    Transcribe an audio file into text using Whisper.
-
-    Args:
-        audio_path (str): Path to the input audio file.
-
-    Returns:
-        str: The transcribed text string.
-    """
     return _asr(audio_path)["text"].strip()
 
 
 def detect_emotion(audio_path: str) -> list:
-    """
-    Perform speech emotion recognition on an audio file.
-
-    Args:
-        audio_path (str): Path to the input audio file.
-
-    Returns:
-        list: A list of dictionaries, each containing:
-              {
-                  'label': str,   # predicted emotion
-                  'score': float  # confidence score
-              }
-    """
     return _ser(audio_path)
 
 
 def analyze_sentiment(text: str) -> list:
-    """
-    Perform sentiment analysis on text and return all label-score pairs.
-
-    Args:
-        text (str): The input text to analyze.
-
-    Returns:
-        list: A list of dictionaries, each containing:
-              {
-                  'label': str,   # sentiment label (e.g., negative, neutral, positive)
-                  'score': float  # confidence score for that label
-              }
-    """
     return _sentiment(text)[0]
 
 

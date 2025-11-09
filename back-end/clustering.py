@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib as plt
 
 # Load CSV file
 data = pd.read_csv('dfw_complaints.csv')
