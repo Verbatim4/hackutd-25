@@ -45,9 +45,5 @@ if __name__ == "__main__":
 
     print("Transcript:", transcript)
     print("\nDetected emotion(s):")
-    for e in emotion:
-        print(f"  {e['label']}: {e['score']:.3f}")
-
-    print("\nText sentiment(s):")
-    for s in sentiment:
-        print(f"  {s['label']}: {s['score']:.3f}")
+    print(emotion)
+    print(sentiment)
